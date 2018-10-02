@@ -1,0 +1,40 @@
+extends ../../layout
+
+block content
+
+    div.container
+
+        h1=title
+        
+        form(method='post',action='')
+
+            div.form-group
+                label(for='name') Full Name
+                input#name.form-control(type='text', name='name' placeholder='Full name' value=(undefined===user ? '' : user.name))
+
+            div.form-group
+                label(for='username') Username
+                input#username.form-control(type='text', name='username' placeholder='Username' value=(undefined===user ? '' : user.username))
+
+            div.form-group
+                label(for='email') Email
+                input#email.form-control(type='email', name='email' placeholder='Email' value=(undefined===user ? '' : user.email))
+
+            div.form-group
+                label(for='password') Password
+                input#password.form-control(type='password', name='password' placeholder='Password')
+
+            button.btn.btn-primary(type='submit') Register
+
+        div.row(style='margin-top: 25px')
+            
+            if errors
+                div.col-sm-12
+                    ul
+                        for error in errors
+                            li!=error.msg
+
+            div.col-sm-12
+                p Already Register? 
+                    a(href='/login') Sign in 
+                    | here
