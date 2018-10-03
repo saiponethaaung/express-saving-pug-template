@@ -6,6 +6,53 @@ var bcrypt = require('bcrypt-nodejs');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
+exports.login_get = function(req, res) {
+    res.render('page/auth/login', { title: 'Login' });
+}
+
+exports.login_post = [
+    //Validate email
+    body('email', 'Email is required!').isLength({ min: 1 }).trim().isEmail().withMessage('Invalid email address!'),
+    // Validate password
+    body('password', 'Password is required!').isLength({ min: 1 }),
+    // Sanitize email
+    sanitizeBody('email').trim().escape(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()) {
+            loginResponse(res, req.body, errors.array());
+            return;
+        }
+
+        async.parallel({
+            user: function(callback) {
+                User.findOne({ email: req.body.email})
+                    .exec(callback);
+            }
+        }, function(err, results) {
+            if(err) { return next(err); }
+
+            if(results.user.length>0) {
+                loginResponse(res, req.body, [{msg: "Invalid email address or password!"}]);
+                return;
+            }
+
+            if(bcrypt.compareSync(req.body.password, results.user.password)===false) {
+                loginResponse(res, req.body, [{msg: "Invalid email address or password!"}]);
+                return;
+            }
+
+            req.session.token = bcrypt.hashSync(JSON.stringify(results.user));
+            res.redirect('/dashboard');
+        });
+    }
+];
+
+function loginResponse(res, user, errors) {
+    res.render('page/auth/login', { title: 'Login', user: user, errors: errors});
+}
+
 exports.register_get = function(req, res) {
     res.render('page/auth/register', { title: 'Register' });
 }

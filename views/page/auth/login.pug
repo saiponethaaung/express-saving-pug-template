@@ -1,0 +1,32 @@
+extends ../../layout
+
+block content
+
+    div.container
+
+        h1=title
+        
+        form(method='post',action='')
+
+            div.form-group
+                label(for='email') Email
+                input#email.form-control(type='email', name='email' placeholder='Email' value=(undefined===user ? '' : user.email))
+
+            div.form-group
+                label(for='password') Password
+                input#password.form-control(type='password', name='password' placeholder='Password')
+
+            button.btn.btn-primary(type='submit') Login
+
+        div.row(style='margin-top: 25px')
+            
+            if errors
+                div.col-sm-12
+                    ul
+                        for error in errors
+                            li!=error.msg
+
+            div.col-sm-12
+                p Haven't register yet? 
+                    a(href='/register') Register 
+                    | here

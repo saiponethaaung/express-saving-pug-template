@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sassMiddleware = require('node-sass-middleware');
+var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 
@@ -21,6 +22,7 @@ db.on('error', console.error.bind(console, "MongoDB connection error:"));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+app.use(session({secret: 'Shhh, it\'s a secret key!'}))
 
 app.use(logger('dev'));
 app.use(express.json());
