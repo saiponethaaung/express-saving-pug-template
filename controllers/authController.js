@@ -44,6 +44,7 @@ exports.login_post = [
             }
 
             req.session.token = bcrypt.hashSync(JSON.stringify(results.user));
+            req.session.info = results.user;
             res.redirect('/dashboard');
         });
     }

@@ -1,45 +1,66 @@
 var express = require('express');
 var router = express.Router();
+var async = require('async');
 
+var ledgerRoute = require('./ledger');
 var Auth = require('../controllers/authController');
+var User = require('../models/user');
 
 router.get('/', function(req, res, next) {
-  if(req.session.pageview) {
-    req.session.pageview++;
-  } else {
-    req.session.pageview = 1;
-  }
-  res.render('index', { title: 'Saving', pageview: req.session.pageview });
+    if(req.session.pageview) {
+        req.session.pageview++;
+    } else {
+        req.session.pageview = 1;
+    }
+    res.render('index', { title: 'Saving', pageview: req.session.pageview });
 });
 
 /* GET home page. */
 router.all('/*', function(req, res, next) {
-  var isLogin = false;
+    var isLogin = false;
+    // Make async call
+    async.parallel({
+        // Check user exists
+        user: function(callback) {
+            User.findById(req.session.info ? req.session.info._id : null)
+            .exec(callback);
+        }
+    }, function(err, results) {
+        // Return to error page if there is an error
+        if(err) { return next(err); }
 
-  if(undefined!==req.session.token) {
-    isLogin = true;
-  }
+        // Check user result
+        if(results.user===null) {
+            isLogin = false;
+        } else {
+            isLogin = true;
+            req.userId = results.user._id;
+        }
 
-  console.log(req.url);
+        // Is login or register page
+        if(req.url==='/login' || req.url==='/register') {
+            
+            // If user login redirect to dashboard
+            if(isLogin) {
+                res.redirect('/dashboard');
+                return;
+            }
 
-  if(req.url==='/login' || req.url==='/register') {
-    
-    if(isLogin) {
-      res.redirect('/dashboard');
-      return;
-    }
+            // Continue to form
+            next();
+            return;
+        }
 
-    next();
-    return;
-  }
+        // Continue to action if user is login
+        if(isLogin) {
+            next();
+            return;
+        }
 
-  if(isLogin) {
-    next();
-    return;
-  }
-
-  res.redirect('/login');
-  return;
+        // Redirect to login page if user is not login
+        res.redirect('/login');
+        return;
+    });
 });
 
 router.get('/register', Auth.register_get);
@@ -49,7 +70,10 @@ router.get('/login', Auth.login_get);
 router.post('/login', Auth.login_post);
 
 router.get('/dashboard', function(req, res) {
-  res.send("welcome to dashboard - "+req.session.token);
+    console.log('req.userId', req.userId);
+    res.send("welcome to dashboard - "+req.session.token);
 });
+
+router.use('/ledger', ledgerRoute);
 
 module.exports = router;
