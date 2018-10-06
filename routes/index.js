@@ -70,8 +70,7 @@ router.get('/login', Auth.login_get);
 router.post('/login', Auth.login_post);
 
 router.get('/dashboard', function(req, res) {
-    console.log('req.userId', req.userId);
-    res.send("welcome to dashboard - "+req.session.token);
+    res.render('page/dashboard', { title: 'Dashboard' });
 });
 
 router.use('/ledger', ledgerRoute);

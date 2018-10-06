@@ -1,0 +1,24 @@
+extends ../../layout
+
+block content
+
+    div.container
+
+        h1=title
+
+        form(method='post',action='')
+
+            div.form-group
+                label(for='name') Name
+                input#name.form-control(type='name', name='name' value=(undefined===ledger ? '' : ledger.name))
+
+            button.btn.btn-primary(type='submit') Create
+
+        div.row(style='margin-top: 25px')
+            
+            if errors
+                div.col-sm-12
+                    ul
+                        for error in errors
+                            li!=error.msg
+                            
