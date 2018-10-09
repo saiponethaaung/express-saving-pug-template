@@ -15,4 +15,10 @@ LedgerSchema
         return '/ledger/' + this._id;
     });
 
+LedgerSchema
+    .virtual('entryUrl')
+    .get(function() {
+        return '/ledger/' + this._id + '/entry';
+    });
+
 module.exports = mongoose.model('Ledger', LedgerSchema);

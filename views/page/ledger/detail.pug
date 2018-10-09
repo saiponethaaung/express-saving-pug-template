@@ -1,0 +1,16 @@
+extends ../../layout
+
+block content
+
+    h1=title
+
+    a(href=ledger.entryUrl) Add Entry
+
+    //- pre=ledger
+
+    ul
+        if entries.length>0
+            for entry in entries
+                li #{entry.name} - #{entry.amount} - #{entry.created_at_formatted}
+        else
+            li There is no entry why not insert one

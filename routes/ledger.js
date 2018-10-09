@@ -7,4 +7,9 @@ router.get('/', LedgerController.ledger_list_get);
 router.get('/create', LedgerController.ledger_create_form_get);
 router.post('/create', LedgerController.ledger_create_form_post);
 
+router.get('/:id', LedgerController.ledger_detail_get);
+
+router.get('/:id/entry', LedgerController.ledger_entry_get);
+router.post('/:id/entry', LedgerController.ledger_entry_post);
+
 module.exports = router;
