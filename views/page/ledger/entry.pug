@@ -19,20 +19,16 @@ block content
             div.form-group
                 lable(for='note') Note
                 textarea#note.form-control(type='text', name='note' value=(undefined===entry ? 0 : entry.note))
-
-            div.form-group
-                lable(for='note') Note
-                textarea#note.form-control(type='text', name='note' value=(undefined===entry ? 0 : entry.note))
             
             fieldset.from-group
                 legend Choose Type
                 div.form-check
                     label.form-check-label
-                        | #[input#credit.form-check-input(type="radio", name="isCredit" value=true required=true)] Credit
+                        | #[input#credit.form-check-input(type="radio", name="isCredit" value="true" required=true checked=true)] Credit
 
                 div.form-check
                     label.form-check-label
-                        | #[input#debit.form-check-input(type="radio", name="isCredit" value=false required=true)] Debit
+                        | #[input#debit.form-check-input(type="radio", name="isCredit" value="false" required=true)] Debit
 
             button.btn.btn-primary(type='submit') Create
 

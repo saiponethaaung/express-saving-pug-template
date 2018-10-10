@@ -2,15 +2,35 @@ extends ../../layout
 
 block content
 
-    h1=title
+    div.container
 
-    a(href=ledger.entryUrl) Add Entry
+        div.row
 
-    //- pre=ledger
+            div.col-md-8.offset-md-2
 
-    ul
-        if entries.length>0
-            for entry in entries
-                li #{entry.name} - #{entry.amount} - #{entry.created_at_formatted}
-        else
-            li There is no entry why not insert one
+                h1=title
+
+                a(href=ledger.entryUrl) Add Entry
+
+                div(style="margin-top:10px")
+                    | Income #{income}
+                    | Expense #{expense}
+                    | Total #{Math.round(Math.abs(income)-Math.abs(expense))}
+
+                ul.ledger-entry-list
+                    if entries.length>0
+
+                        for entry in entries
+
+                            li.ledger-entry
+
+                                a(href='javascript:void(0)')
+
+                                    div.ledger-entry-desc.float-left
+                                        div.ledger-entry-name=entry.name
+                                        div.ledger-entry-date=entry.created_at_formatted
+                                        
+                                    div.ledger-entry-amount.float-left
+                                        | #{entry.amount}
+                    else
+                        li There is no entry why not insert one

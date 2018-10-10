@@ -1,6 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title} - #{pageview}
-  a(href='/register') Register now
+
+    div.container
+
+        h1= title
+    
+        p Welcome to #{title} - #{pageview}
+    
+        a(href='/register') Register now
+        |&nbsp;or&nbsp;
+        a(href='/Login') Login

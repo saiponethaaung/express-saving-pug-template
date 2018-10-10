@@ -2,19 +2,21 @@ extends ../../layout
 
 block content
 
-    h1=title
+    div.container
 
-    a(href="/ledger/create") Create new ledger
+        h1=title
 
-    ul
+        a(href="/ledger/create") Create new ledger
 
-        if(ledgerLists.length>0)
+        ul
 
-            for ledger in ledgerLists
+            if(ledgerLists.length>0)
 
-                li
-                    a(href=ledger.url) #{ledger.name}
+                for ledger in ledgerLists
 
-        else
+                    li
+                        a(href=ledger.url) #{ledger.name}
 
-            li There is no ledger in this account. Why don't you create one.
+            else
+
+                li There is no ledger in this account. Why don't you create one.

@@ -1,5 +1,6 @@
 var Ledger = require('../models/ledger');
 var Record = require('../models/records');
+var mongoose = require('mongoose');
 var async = require('async');
 
 const { body, validationResult } = require('express-validator/check');
@@ -62,22 +63,50 @@ exports.ledger_detail_get = function(req, res, next) {
                 .sort({'createdAt': -1})
                 .exec(callback);
         },
-        // income: function(callback) {
-        //     Record.aggregate(
-        //         [
-        //             {
-        //                 $group: {
-        //                     _id: {ledger: req.params.id},
-        //                     amount: { $sum: "$amount" }
-        //                 }
-        //             }
-        //         ]
-        //     ).exec(callback);
-        // }
+        income: function(callback) {
+            Record.aggregate([
+                {
+                    $match: {
+                        ledger: new mongoose.Types.ObjectId(req.params.id),
+                        credit: false
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        amount: { $sum: "$amount" }
+                    }
+                }
+            ]).exec(callback);
+        },
+        expense: function(callback) {
+            Record.aggregate([
+                {
+                    $match: {
+                        ledger: new mongoose.Types.ObjectId(req.params.id),
+                        credit: true
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        amount: { $sum: "$amount" }
+                    }
+                }
+            ]).exec(callback);
+        }
     }, function(err, results) {
         if(err) { return next(err); }
 
-        res.render('page/ledger/detail', { title: `${results.ledger.name} info`, ledger: results.ledger, entries: results.entries});
+        console.log('records', results.income)
+
+        res.render('page/ledger/detail', {
+            title: `${results.ledger.name} info`,
+            ledger: results.ledger,
+            entries: results.entries,
+            income: results.income[0].amount,
+            expense: results.expense[0].amount
+        });
     });
 }
 
@@ -102,6 +131,7 @@ exports.ledger_entry_get = function(req, res, next) {
 exports.ledger_entry_post = [
     body('name', 'Entry name is required!').isLength({min: 1}).trim(),
     body('amount', 'Amount is required!').isLength({min: 1}).trim(),
+    body('isCredit', 'Check whatever it\'s credit or not!').isIn([true, false]).trim(),
     sanitizeBody('*').trim().escape(),
     (req, res, next) => {
         const error = validationResult(req);
@@ -124,6 +154,7 @@ exports.ledger_entry_post = [
                 name: req.body.name,
                 amount: req.body.amount,
                 note: req.body.note,
+                credit: req.body.isCredit=="true" ? true : false,
                 entryBy: req.userId
             });
     
