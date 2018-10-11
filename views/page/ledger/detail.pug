@@ -19,7 +19,9 @@ block content
 
                 div(style="margin-top:10px")
                     | Income #{income}
+                    br
                     | Expense #{expense}
+                    br
                     | Total #{Math.round(Math.abs(income)-Math.abs(expense))}
 
                 ul.ledger-entry-list
