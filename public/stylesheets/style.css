@@ -1,5 +1,4 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
 
 a {
@@ -35,5 +34,14 @@ a {
 .ledger-entry-amount {
   width: 100px;
   text-align: right; }
+
+.entry-credit .ledger-entry-amount {
+  color: red; }
+
+.entry-credit .ledger-entry-amount {
+  color: red; }
+
+.entry-debit .ledger-entry-amount {
+  color: #00ff39; }
 
 /*# sourceMappingURL=style.css.map */

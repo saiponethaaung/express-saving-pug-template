@@ -12,6 +12,9 @@ block content
 
                 a(href="/ledger") Go back to Ledger list
 
+                br
+                br
+
                 a(href=ledger.entryUrl) Add Entry
 
                 div(style="margin-top:10px")
@@ -24,7 +27,7 @@ block content
 
                         for entry in entries
 
-                            li.ledger-entry
+                            li.ledger-entry(class=entry.credit ? "entry-credit" : "entry-debit")
 
                                 a(href='javascript:void(0)')
 
@@ -33,6 +36,6 @@ block content
                                         div.ledger-entry-date=entry.created_at_formatted
                                         
                                     div.ledger-entry-amount.float-left
-                                        | #{entry.amount}
+                                        | #{entry.credit ? "-" : "+" } #{entry.amount}
                     else
                         li There is no entry why not insert one
