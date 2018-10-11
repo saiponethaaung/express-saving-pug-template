@@ -14,6 +14,7 @@ var mongoose = require('mongoose');
 var mongoDB = 'mongodb://127.0.0.1/saving';
 
 mongoose.connect(mongoDB, { useNewUrlParser: true });
+mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
 var db = mongoose.connection;
