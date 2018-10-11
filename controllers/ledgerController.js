@@ -104,8 +104,8 @@ exports.ledger_detail_get = function(req, res, next) {
             title: `${results.ledger.name} info`,
             ledger: results.ledger,
             entries: results.entries,
-            income: results.income.length>0 ? results.income[0].amount : 0,
-            expense: results.expense.length>0 ? results.expense[0].amount : 0
+            income: undefined!==results.income[0].amount ? results.income[0].amount : 0,
+            expense: undefined!==results.expense[0].amount ? results.expense[0].amount : 0
         });
     });
 }
