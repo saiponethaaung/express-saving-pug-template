@@ -37,8 +37,8 @@ router.all('/*', function(req, res, next) {
             req.userId = results.user._id;
         }
 
-        // Is login or register page
-        if(req.url==='/login' || req.url==='/register') {
+        // Is home or login or register page
+        if(req.url==='/' || req.url==='/login' || req.url==='/register') {
             
             // If user login redirect to dashboard
             if(isLogin) {
@@ -61,6 +61,13 @@ router.all('/*', function(req, res, next) {
         res.redirect('/login');
         return;
     });
+});
+
+router.get('/', function(req, res) {
+    res.send(`
+        Welcome to my money maker<br/>
+        <a href='/login'>Login> | <a href='/register'>Register</a>
+    `);
 });
 
 router.get('/register', Auth.register_get);
