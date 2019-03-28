@@ -1,0 +1,46 @@
+extends ../../layout
+
+block content
+
+    div.container
+
+        h1=title
+        
+        br
+        br
+
+        a(href=ledger.url) Back to #{ledger.name} detail
+
+        form(method='POST', action='')
+
+            div.form-group
+                lable(for='name') Name
+                input#name.form-control(type='text', name='name' value=(undefined===entry ? '' : entry.name))
+
+            div.form-group
+                lable(for='amount') Amount
+                input#amount.form-control(type='nubmer', name='amount' value=(undefined===entry ? 0 : entry.amount))
+
+            div.form-group
+                lable(for='note') Note
+                textarea#note.form-control(type='text', name='note' value=(undefined===entry ? 0 : entry.note))
+            
+            fieldset.from-group
+                legend Choose Type
+                div.form-check
+                    label.form-check-label
+                        | #[input#credit.form-check-input(type="radio", name="isCredit" value="true" required=true checked=(undefined===entry || entry.isCredit ? true : false))] Credit
+
+                div.form-check
+                    label.form-check-label
+                        | #[input#debit.form-check-input(type="radio", name="isCredit" value="false" required=true checked=(undefined!==entry && !entry.isCredit ? true : false))] Debit
+
+            button.btn.btn-primary(type='submit') Update
+
+        div.row(style='margin-top: 25px')
+            
+            if errors
+                div.col-sm-12
+                    ul
+                        for error in errors
+                            li!=error.msg

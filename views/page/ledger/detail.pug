@@ -31,11 +31,13 @@ block content
 
                             li.ledger-entry(class=entry.credit ? "entry-credit" : "entry-debit")
 
-                                a(href='javascript:void(0)')
+                                div.ledger-root
 
                                     div.ledger-entry-desc.float-left
                                         div.ledger-entry-name=entry.name
                                         div.ledger-entry-date=entry.created_at_formatted
+                                        a.btn.btn-primary.btn-sm(href=`/ledger/${ledger._id}/entry/${entry._id}`) Edit
+                                        a.btn.btn-danger.btn-sm(href=`/ledger/${ledger._id}/entry/${entry._id}/delete`) Delete
                                         
                                     div.ledger-entry-amount.float-left
                                         | #{entry.credit ? "-" : "+" } #{entry.amount}

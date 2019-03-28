@@ -15,7 +15,7 @@ a {
 .ledger-entry {
   display: flex;
   padding: 10px; }
-  .ledger-entry a {
+  .ledger-entry .ledger-root {
     width: 100%;
     color: #000; }
 

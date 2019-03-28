@@ -175,9 +175,98 @@ exports.ledger_entry_post = [
 ];
 
 exports.ledger_entry_update_get = function(req, res, next) {
+    async.parallel({
+        ledger: function(callback) {
+            Ledger.findById(req.params.id)
+                .exec(callback);
+        },
+        entry: function(callback) {
+            Record.findById(req.params.entryid)
+                .exec(callback);
+        }
+    }, function(err, results) {
+        if(err) { return next(err); }
 
+        res.render('page/ledger/edit', { title: 'Ledger List', entry: results.entry, ledger: results.ledger});
+    });
 };
 
 exports.ledger_entry_update_post = [
+    body('name', 'Entry name is required!').isLength({min: 1}).trim(),
+    body('amount', 'Amount is required!').isLength({min: 1}).trim(),
+    body('isCredit', 'Check whatever it\'s credit or not!').isIn([true, false]).trim(),
+    sanitizeBody('*').trim().escape(),
+    (req, res, next) => {
+        const error = validationResult(req);
 
+        async.parallel({
+            ledger: function(callback) {
+                Ledger.findById(req.params.id)
+                    .exec(callback);
+            },
+            entry: function(callback) {
+                Record.findById(req.params.entryid)
+                    .exec(callback);
+            }
+        }, function(err, results) {
+            if(err) { return next(err); }
+    
+            if(results.ledger.length===0) {
+                res.redirect('/ledger');
+                return;
+            }
+
+            if(results.entry.length===0) {
+                res.redirect(results.ledger.url);
+                return;
+            }
+
+            results.entry.name = req.body.name;
+            results.entry.amount = req.body.amount;
+            results.entry.note = req.body.note;
+            results.entry.credit = req.body.isCredit=="true" ? true : false;
+            results.entry.entryBy = req.userId;
+            
+            results.entry.save(function(err) {
+                if(err) { return next(err); }
+                
+                res.redirect(results.ledger.url);
+                return;
+            });
+        });
+
+    }
 ];
+
+exports.ledger_entry_delete = (req, res, next) => {
+    async.parallel({
+        ledger: function(callback) {
+            Ledger.findById(req.params.id)
+                .exec(callback);
+        },
+        entry: function(callback) {
+            Record.findById(req.params.entryid)
+                .exec(callback);
+        }
+    }, function(err, results) {
+        if(err) { return next(err); }
+
+        if(results.ledger.length===0) {
+            res.redirect('/ledger');
+            return;
+        }
+
+        if(results.entry.length===0) {
+            res.redirect(results.ledger.url);
+            return;
+        }
+              
+        results.entry.delete(function(err) {
+            if(err) { return next(err); }
+            
+            res.redirect(results.ledger.url);
+            return;
+        });
+    });
+
+};
