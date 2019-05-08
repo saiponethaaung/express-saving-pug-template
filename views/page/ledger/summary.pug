@@ -1,0 +1,54 @@
+extends ../../layout
+
+block content
+
+    div.container
+
+        div.row
+
+            div.col-md-8.offset-md-2.col-sm-12
+
+                h1=title
+
+                a(href="/ledger/"+ledger._id) Go back to Ledger info
+
+                br
+                br
+
+                div(style="margin-top:10px")
+                    | Income #{income}
+                    br
+                    | Expense #{expense}
+                    br
+                    | Total #{Math.round(Math.abs(income)-Math.abs(expense))}
+
+                br
+
+                each year, index in summary
+
+                    h4=year.year
+
+                    for month in year.months
+
+                        h6=month.month
+
+                        ul.ledger-entry-list
+
+                            li.ledger-entry.entry-debit
+                                div.ledger-root
+
+                                    div.ledger-entry-desc.float-left
+                                        div.ledger-entry-name Income
+
+                                    div.ledger-entry-amount.float-left
+                                        | +#{month.amount.income}
+
+                            li.ledger-entry.entry-credit
+                                div.ledger-root
+
+                                    div.ledger-entry-desc.float-left
+                                        div.ledger-entry-name Expense
+
+                                    div.ledger-entry-amount.float-left
+                                        | +#{month.amount.expense}
+                        br

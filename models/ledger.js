@@ -16,6 +16,12 @@ LedgerSchema
     });
 
 LedgerSchema
+    .virtual('summaryUrl')
+    .get(function() {
+        return '/ledger/' + this._id + '/summary';
+    });
+
+LedgerSchema
     .virtual('entryUrl')
     .get(function() {
         return '/ledger/' + this._id + '/entry';

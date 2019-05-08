@@ -9,6 +9,7 @@ router.post('/create', LedgerController.ledger_create_form_post);
 
 router.get('/:id', LedgerController.ledger_detail_get);
 
+router.get('/:id/summary', LedgerController.ledger_summary);
 router.get('/:id/entry', LedgerController.ledger_entry_get);
 router.post('/:id/entry', LedgerController.ledger_entry_post);
 

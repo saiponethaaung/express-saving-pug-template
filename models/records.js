@@ -19,4 +19,10 @@ RecordSchema
         return this.createdAt ? moment(this.createdAt).format("YYYY-MM-DD h:mm a") : "";
     });
 
+RecordSchema
+    .virtual('created_at_month')
+    .get(function() {
+        return this.createdAt ? moment(this.createdAt).format("MMMM") : "";
+    });
+
 module.exports = mongoose.model('Record', RecordSchema);

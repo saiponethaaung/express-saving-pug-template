@@ -52,6 +52,101 @@ function ledgerCreateResponse(res, user, errors) {
     res.render('page/ledger/form', { title: 'Create ledger', user: user, errors: errors});
 }
 
+exports.ledger_summary = function(req, res, next) {
+    async.parallel({
+        ledger: function(callback){
+            Ledger.findById(req.params.id)
+                .exec(callback);
+        },
+        entries: function(callback) {
+            Record.find({ledger: req.params.id})
+                .sort({'createdAt': -1})
+                .exec(callback);
+        },
+        income: function(callback) {
+            Record.aggregate([
+                {
+                    $match: {
+                        ledger: new mongoose.Types.ObjectId(req.params.id),
+                        credit: false
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        amount: { $sum: "$amount" }
+                    }
+                }
+            ]).exec(callback);
+        },
+        expense: function(callback) {
+            Record.aggregate([
+                {
+                    $match: {
+                        ledger: new mongoose.Types.ObjectId(req.params.id),
+                        credit: true
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        amount: { $sum: "$amount" }
+                    }
+                }
+            ]).exec(callback);
+        }
+    }, function(err, results) {
+        if(err) { return next(err); }
+
+        console.log('records', results.income)
+
+        let summary = {};
+
+        for(let i of results.entries) {
+            let date = new Date(i.createdAt);
+            if(undefined==summary[date.getFullYear()]){
+                summary[date.getFullYear()] = {
+                    year: date.getFullYear(),
+                    months: {}
+                };
+            }
+            if(undefined==summary[date.getFullYear()].months[date.getMonth()]){
+                summary[date.getFullYear()].months[date.getMonth()] = {
+                    sort: date.getMonth(),
+                    month: i.created_at_month,
+                    amount: {
+                        income: 0,
+                        expense: 0
+                    }
+                };
+            }
+
+            if(i.credit) {
+                summary[date.getFullYear()].months[date.getMonth()].amount.expense += i.amount;
+            } else {
+                summary[date.getFullYear()].months[date.getMonth()].amount.income += i.amount;
+            }
+        }
+
+        var sortable = [];
+        for (var summaryEntry in summary) {
+            sortable.push(summary[summaryEntry]);
+        }
+
+        sortable.sort(function(a, b) {
+            return a.year < b.year;
+        });
+
+        res.render('page/ledger/summary', {
+            title: `${results.ledger.name} info`,
+            summary: sortable,
+            ledger: results.ledger,
+            income: results.income.length>0 && undefined!==results.income[0].amount ? results.income[0].amount : 0,
+            expense: results.expense.length>0 && undefined!==results.expense[0].amount ? results.expense[0].amount : 0
+        });
+    });
+}
+
 exports.ledger_detail_get = function(req, res, next) {
     async.parallel({
         ledger: function(callback){
