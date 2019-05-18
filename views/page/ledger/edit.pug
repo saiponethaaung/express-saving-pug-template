@@ -29,11 +29,11 @@ block content
                 legend Choose Type
                 div.form-check
                     label.form-check-label
-                        | #[input#credit.form-check-input(type="radio", name="isCredit" value="true" required=true checked=(undefined===entry || entry.isCredit ? true : false))] Credit
+                        | #[input#credit.form-check-input(type="radio", name="isCredit" value="true" required=true checked=(undefined===entry || entry.credit ? true : false))] Credit
 
                 div.form-check
                     label.form-check-label
-                        | #[input#debit.form-check-input(type="radio", name="isCredit" value="false" required=true checked=(undefined!==entry && !entry.isCredit ? true : false))] Debit
+                        | #[input#debit.form-check-input(type="radio", name="isCredit" value="false" required=true checked=(undefined!==entry && !entry.credit ? true : false))] Debit
 
             button.btn.btn-primary(type='submit') Update
 
