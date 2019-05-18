@@ -23,7 +23,7 @@ block content
 
             div.form-group
                 lable(for='note') Note
-                textarea#note.form-control(type='text', name='note' value=(undefined===entry ? 0 : entry.note))
+                textarea#note.form-control(type='text', name='note')=(undefined===entry ? 0 : entry.note)
             
             fieldset.from-group
                 legend Choose Type
