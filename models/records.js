@@ -9,6 +9,7 @@ var RecordSchema = new Schema({
     amount: { type: Number, default: 0, required: true },
     credit: { type: Boolean, default: true },
     entryBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    entryFor: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 });
@@ -23,6 +24,12 @@ RecordSchema
     .virtual('created_at_month')
     .get(function() {
         return this.createdAt ? moment(this.createdAt).format("MMMM") : "";
+    });
+
+RecordSchema
+    .virtual('entry_for_formatted')
+    .get(function() {
+        return this.entryFor ? moment(this.entryFor).format("YYYY-MM-DD") : "";
     });
 
 module.exports = mongoose.model('Record', RecordSchema);

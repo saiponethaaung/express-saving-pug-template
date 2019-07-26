@@ -40,7 +40,7 @@ block content
 
                                     div.ledger-entry-desc.float-left
                                         div.ledger-entry-name=entry.name
-                                        div.ledger-entry-date=entry.created_at_formatted
+                                        div.ledger-entry-date=`Entry for ${entry.entry_for_formatted} - Entry at ${entry.created_at_formatted}`
                                         a.btn.btn-primary.btn-sm(href=`/ledger/${ledger._id}/entry/${entry._id}`) Edit
                                         a.btn.btn-danger.btn-sm(href=`/ledger/${ledger._id}/entry/${entry._id}/delete`) Delete
                                         

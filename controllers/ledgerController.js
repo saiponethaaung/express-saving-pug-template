@@ -249,6 +249,7 @@ exports.ledger_entry_post = [
                 name: req.body.name,
                 amount: req.body.amount,
                 note: req.body.note,
+                entryFor: req.body.entryFor,
                 credit: req.body.isCredit=="true" ? true : false,
                 entryBy: req.userId
             });

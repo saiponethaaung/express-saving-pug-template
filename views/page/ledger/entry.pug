@@ -22,6 +22,10 @@ block content
                 input#amount.form-control(type='nubmer', name='amount' value=(undefined===entry ? 0 : entry.amount))
 
             div.form-group
+                lable(for='entryFor') Entry for date
+                input#entryFor.form-control(type='date', name='entryFor' placeholder="YYYY-mm-dd (2017-12-12)" value=(undefined===entry ? 0 : entry.entryFor))
+
+            div.form-group
                 lable(for='note') Note
                 textarea#note.form-control(type='text', name='note' value=(undefined===entry ? 0 : entry.note))
             
