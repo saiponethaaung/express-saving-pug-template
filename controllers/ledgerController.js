@@ -60,7 +60,7 @@ exports.ledger_summary = function(req, res, next) {
         },
         entries: function(callback) {
             Record.find({ledger: req.params.id})
-                .sort({'createdAt': -1})
+                .sort({'entryFor': -1})
                 .exec(callback);
         },
         income: function(callback) {
