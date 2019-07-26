@@ -321,6 +321,7 @@ exports.ledger_entry_update_post = [
             results.entry.amount = req.body.amount;
             results.entry.note = req.body.note;
             results.entry.credit = req.body.isCredit=="true" ? true : false;
+            results.entry.entryFor = req.body.entryFor;
             results.entry.entryBy = req.userId;
             
             results.entry.save(function(err) {
