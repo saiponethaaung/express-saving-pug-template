@@ -33,7 +33,7 @@ exports.login_post = [
         }, function(err, results) {
             if(err) { return next(err); }
 
-            if(results.user.length>0) {
+            if(results.user==null || results.user.length>0) {
                 loginResponse(res, req.body, [{msg: "Invalid email address or password!"}]);
                 return;
             }
