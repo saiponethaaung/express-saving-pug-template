@@ -1,3 +1,5 @@
+import { NextFunction, Response } from 'express';
+
 var User = require('../models/user');
 var async = require('async');
 
@@ -6,7 +8,7 @@ var bcrypt = require('bcrypt-nodejs');
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
-exports.login_get = function(req, res) {
+exports.login_get = function (req: any, res: Response) {
     res.render('page/auth/login', { title: 'Login' });
 }
 
@@ -17,29 +19,29 @@ exports.login_post = [
     body('password', 'Password is required!').isLength({ min: 1 }),
     // Sanitize email
     sanitizeBody('email').trim().escape(),
-    (req, res, next) => {
-        const errors = validationResult(req);
+    (req: any, res: Response, next: NextFunction) => {
+        const errors: any = validationResult(req);
 
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             loginResponse(res, req.body, errors.array());
             return;
         }
 
         async.parallel({
-            user: function(callback) {
-                User.findOne({ email: req.body.email})
+            user: function (callback: Function) {
+                User.findOne({ email: req.body.email })
                     .exec(callback);
             }
-        }, function(err, results) {
-            if(err) { return next(err); }
+        }, function (err: any, results: any) {
+            if (err) { return next(err); }
 
-            if(results.user==null || results.user.length>0) {
-                loginResponse(res, req.body, [{msg: "Invalid email address or password!"}]);
+            if (results.user == null || results.user.length > 0) {
+                loginResponse(res, req.body, [{ msg: "Invalid email address or password!" }]);
                 return;
             }
 
-            if(bcrypt.compareSync(req.body.password, results.user.password)===false) {
-                loginResponse(res, req.body, [{msg: "Invalid email address or password!"}]);
+            if (bcrypt.compareSync(req.body.password, results.user.password) === false) {
+                loginResponse(res, req.body, [{ msg: "Invalid email address or password!" }]);
                 return;
             }
 
@@ -50,11 +52,11 @@ exports.login_post = [
     }
 ];
 
-function loginResponse(res, user, errors) {
-    res.render('page/auth/login', { title: 'Login', user: user, errors: errors});
+function loginResponse(res: Response, user: any, errors: any) {
+    res.render('page/auth/login', { title: 'Login', user: user, errors: errors });
 }
 
-exports.register_get = function(req, res) {
+exports.register_get = function (req: any, res: Response) {
     res.render('page/auth/register', { title: 'Register' });
 }
 
@@ -71,37 +73,37 @@ exports.register_post = [
     sanitizeBody('name').trim().escape(),
     sanitizeBody('username').trim().escape(),
     sanitizeBody('email').trim().escape(),
-    (req, res, next) => {
+    (req: any, res: Response, next: NextFunction) => {
         const errors = validationResult(req);
-        
+
         // Check validation failed
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             reigsterResponse(res, req.body, errors.array());
             return;
         }
 
         async.parallel({
-            username: function(callback) {
+            username: function (callback: Function) {
                 User.count({ username: req.body.name })
                     .exec(callback);
             },
-            email: function(callback) {
+            email: function (callback: Function) {
                 User.count({ email: req.body.email })
                     .exec(callback);
             }
-        }, function(err, results) {
+        }, function (err: any, results: any) {
             // redirect to error handler if mongoose failed
-            if(err) { return next(err); }
+            if (err) { return next(err); }
 
             // return error if username is already exists
-            if(results.username>0) {
-                reigsterResponse(res, req.body, [{msg: 'Username is already taken!'}]);
+            if (results.username > 0) {
+                reigsterResponse(res, req.body, [{ msg: 'Username is already taken!' }]);
                 return;
             }
 
             // return error if email is already exists
-            if(results.email>0) {
-                reigsterResponse(res, req.body, [{msg: 'Email is already taken!'}]);
+            if (results.email > 0) {
+                reigsterResponse(res, req.body, [{ msg: 'Email is already taken!' }]);
                 return;
             }
 
@@ -114,9 +116,9 @@ exports.register_post = [
             });
 
             // Save user info
-            user.save(function(err) {
+            user.save(function (err: any) {
                 // redirect to error handler if mongoose failed
-                if(err) { return next(err); }
+                if (err) { return next(err); }
 
                 // Send confirmation email and show message
                 res.send("Registartion success. Check your email for email confirmation!");
@@ -126,6 +128,6 @@ exports.register_post = [
     }
 ];
 
-function reigsterResponse(res, user, errors) {
-    res.render('page/auth/register', { title: 'Register', user: user, errors: errors});
+function reigsterResponse(res: Response, user: any, errors: any) {
+    res.render('page/auth/register', { title: 'Register', user: user, errors: errors });
 }

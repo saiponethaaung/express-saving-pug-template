@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { HttpError } from 'http-errors';
+
 /**
  * Module dependencies.
  */
@@ -33,7 +35,7 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
+function normalizePort(val: string) {
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
@@ -53,7 +55,7 @@ function normalizePort(val) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+function onError(error: HttpError) {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -87,5 +89,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  console.log("Application running on http://localhost:"+addr.port);
+  console.log("Application running on http://localhost:" + addr.port);
 }

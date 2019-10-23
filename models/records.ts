@@ -16,19 +16,19 @@ var RecordSchema = new Schema({
 
 RecordSchema
     .virtual('created_at_formatted')
-    .get(function() {
+    .get(function (this: any) {
         return this.createdAt ? moment(this.createdAt).format("YYYY-MM-DD h:mm a") : "";
     });
 
 RecordSchema
     .virtual('created_at_month')
-    .get(function() {
+    .get(function (this: any) {
         return this.createdAt ? moment(this.createdAt).format("MMMM") : "";
     });
 
 RecordSchema
     .virtual('entry_for_formatted')
-    .get(function() {
+    .get(function (this: any) {
         return this.entryFor ? moment(this.entryFor).format("YYYY-MM-DD") : "";
     });
 

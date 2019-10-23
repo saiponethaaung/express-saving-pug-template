@@ -1,3 +1,6 @@
+import { NextFunction, Response } from 'express';
+import { HttpError } from 'http-errors';
+
 var express = require('express');
 var router = express.Router();
 var async = require('async');
@@ -6,8 +9,8 @@ var ledgerRoute = require('./ledger');
 var Auth = require('../controllers/authController');
 var User = require('../models/user');
 
-router.get('/', function(req, res, next) {
-    if(req.session.pageview) {
+router.get('/', function (req: any, res: Response, next: NextFunction) {
+    if (req.session.pageview) {
         req.session.pageview++;
     } else {
         req.session.pageview = 1;
@@ -16,21 +19,21 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET home page. */
-router.all('/*', function(req, res, next) {
+router.all('/*', function (req: any, res: Response, next: NextFunction) {
     var isLogin = false;
     // Make async call
     async.parallel({
         // Check user exists
-        user: function(callback) {
+        user: function (callback: Function) {
             User.findById(req.session.info ? req.session.info._id : null)
-            .exec(callback);
+                .exec(callback);
         }
-    }, function(err, results) {
+    }, function (err: HttpError, results: any) {
         // Return to error page if there is an error
-        if(err) { return next(err); }
+        if (err) { return next(err); }
 
         // Check user result
-        if(results.user===null) {
+        if (results.user === null) {
             isLogin = false;
         } else {
             isLogin = true;
@@ -38,10 +41,10 @@ router.all('/*', function(req, res, next) {
         }
 
         // Is home or login or register page
-        if(req.url==='/' || req.url==='/login' || req.url==='/register') {
-            
+        if (req.url === '/' || req.url === '/login' || req.url === '/register') {
+
             // If user login redirect to dashboard
-            if(isLogin) {
+            if (isLogin) {
                 res.redirect('/dashboard');
                 return;
             }
@@ -52,7 +55,7 @@ router.all('/*', function(req, res, next) {
         }
 
         // Continue to action if user is login
-        if(isLogin) {
+        if (isLogin) {
             next();
             return;
         }
@@ -63,7 +66,7 @@ router.all('/*', function(req, res, next) {
     });
 });
 
-router.get('/', function(req, res) {
+router.get('/', function (req: any, res: Response) {
     res.send(`
         Welcome to my money maker<br/>
         <a href='/login'>Login> | <a href='/register'>Register</a>
@@ -76,7 +79,7 @@ router.post('/register', Auth.register_post);
 router.get('/login', Auth.login_get);
 router.post('/login', Auth.login_post);
 
-router.get('/dashboard', function(req, res) {
+router.get('/dashboard', function (req: any, res: Response) {
     res.render('page/dashboard', { title: 'Dashboard' });
 });
 
