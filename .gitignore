@@ -61,3 +61,6 @@ typings/
 .next
 process.json
 package-json.lock
+
+# cypress
+/cypress/videos

@@ -8,7 +8,9 @@
     "prod": "tsc && node ./build/app.js",
     "start": "ts-node-dev ./bin/www",
     "devStart": "nodemon ./bin/www",
-    "test:cypress": "PORT=8989 start-server-and-test start cypress",
+    "test:cypress": "cross-env PORT=8989 start-server-and-test start http://localhost:8989 cypress",
+    "test:cypress-debug": "cross-env PORT=8989 start-server-and-test start http://localhost:8989 cypressOpen",
+    "cypressOpen": "cypress open",
     "cypress": "cypress run"
   },
   "dependencies": {
@@ -38,6 +40,7 @@
     "typescript": "^3.6.4"
   },
   "devDependencies": {
+    "cross-env": "^6.0.3",
     "cypress": "^3.4.1",
     "start-server-and-test": "^1.10.6"
   }
